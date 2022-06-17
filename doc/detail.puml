@@ -1,0 +1,41 @@
+@startuml detail
+participant MainActivity as MainActivity
+participant ScoreActivity as ScoreActivity
+boundary SnakeView as SnakeView
+participant SQLiteDBHelper as SQLiteDBHelper
+database SQLite as SQLite
+activate MainActivity
+MainActivity -> SnakeView: 游戏开始
+activate SnakeView
+SnakeView -> SnakeView: 启动背景音乐
+    SnakeView -> MainActivity: 绘制贪吃蛇视图并显示
+    MainActivity -> SnakeView: 贪吃蛇移动
+    alt 移动按钮
+        SnakeView -> SnakeView: 更新贪吃蛇方向\n与蛇身坐标数组
+    else 暂停按钮
+        MainActivity -> SnakeView: 游戏停止
+        SnakeView -> SnakeView: 保存游戏数据，\n进入暂停状态
+        MainActivity -> SnakeView: 继续按钮，游戏继续
+    else 吃到食物
+        SnakeView -> SnakeView: 更新贪吃蛇数组信息
+        SnakeView -> MainActivity: 更新游戏分数, 发出音效
+    end
+SnakeView -> MainActivity: 碰到墙壁或自身，界面暂停
+deactivate SnakeView
+MainActivity -> MainActivity: 弹出用户名提示框
+MainActivity -> SQLiteDBHelper: 记录游戏数据
+activate SQLiteDBHelper
+SQLiteDBHelper -> SQLite: 更新游戏数据
+deactivate SQLiteDBHelper
+MainActivity -> ScoreActivity: 点击 TOP TEN 按钮
+deactivate MainActivity
+activate ScoreActivity
+ScoreActivity -> SQLiteDBHelper: 获取前十名数据
+activate SQLiteDBHelper
+SQLiteDBHelper -> SQLite: 查找数据
+activate SQLite
+SQLite -> SQLiteDBHelper: 返回前十名数据
+deactivate SQLite
+SQLiteDBHelper -> ScoreActivity: 显示前十名用户名及分数
+deactivate ScoreActivity
+@enduml

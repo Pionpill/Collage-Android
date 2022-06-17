@@ -1,0 +1,21 @@
+@startuml logic
+start
+:绘图，初始化蛇和食物;
+:启动游戏;
+:蛇移动，位置数组后坐标覆盖前坐标;
+while(碰到墙壁或自身?) is (no)
+    switch()
+        case(移动按钮)
+            :更新蛇坐标位置;
+            :根据按钮改变蛇头方向;
+        case(吃到食物)
+            :蛇身+1,坐标数组更新;
+            :分数+1;
+        case(暂停按钮)
+            :停止游戏;
+            :继续按钮;
+    endswitch
+endwhile(yes)
+:记录游戏数据;
+stop
+@enduml
